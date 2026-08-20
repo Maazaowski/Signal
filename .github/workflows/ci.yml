@@ -36,6 +36,15 @@ jobs:
           cache: pip
           cache-dependency-path: requirements*.txt
 
+      # setup-python's image ships setuptools, which Signal does not depend on
+      # and does not pin — but pip-audit scans the whole environment, so an
+      # advisory in the runner's own build tooling fails the build. The two
+      # Python images ship different versions, so this also stops the legs
+      # disagreeing. Upgrading removes the vulnerable code rather than
+      # suppressing the finding.
+      - name: Update build tooling
+        run: python -m pip install --upgrade pip setuptools wheel
+
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
 
