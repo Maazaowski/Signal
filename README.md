@@ -10,7 +10,7 @@ a short list every morning.
 
 <br>
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Maazaowski/Signal/ci.yml?branch=main&label=CI&style=flat-square&labelColor=1a1917&color=0f5f4e)](../../actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/Maazaowski/Signal/ci.yml?branch=main&label=CI&style=flat-square&labelColor=1a1917)](../../actions)
 ![Python](https://img.shields.io/badge/python-3.11%2B-1a1917?style=flat-square&labelColor=1a1917&color=4a5568)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-1a1917?style=flat-square&labelColor=1a1917&color=4a5568)](https://fastapi.tiangolo.com)
 [![Licence](https://img.shields.io/badge/licence-MIT-1a1917?style=flat-square&labelColor=1a1917&color=4a5568)](#licence)

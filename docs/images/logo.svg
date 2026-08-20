@@ -1,9 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48" role="img" aria-label="Signal">
-  <g transform="translate(4,14)" fill="none" stroke="#0f5f4e" stroke-linecap="round">
-    <path d="M3 16.5v-2.4M7 16.5v-4M15.5 16.5v-3.2" stroke-width="1.8" opacity=".45"/>
-    <path d="M11.2 16.5V7.4" stroke-width="2"/>
-    <circle cx="11.2" cy="4.3" r="2.3" fill="#0f5f4e" stroke="none"/>
+  <!-- Theme-aware: this is rendered via <img> in README, where the page's own
+       colours do not reach it. The media query does, so the palette is defined
+       here. Values match static/css/tokens.css. -->
+  <style>
+    .mark { stroke: #1B6353; }
+    .dot  { fill:   #1B6353; }
+    .word { fill:   #1C1B18; }
+    @media (prefers-color-scheme: dark) {
+      .mark { stroke: #57A48D; }
+      .dot  { fill:   #57A48D; }
+      .word { fill:   #EFEBE3; }
+    }
+  </style>
+  <g transform="translate(4,14)" fill="none" stroke-linecap="round">
+    <path class="mark" d="M3 16.5v-2.4M7 16.5v-4M15.5 16.5v-3.2" stroke-width="1.8" opacity=".45"/>
+    <path class="mark" d="M11.2 16.5V7.4" stroke-width="2"/>
+    <circle class="dot" cx="11.2" cy="4.3" r="2.3" stroke="none"/>
   </g>
-  <text x="34" y="32" font-family="Iowan Old Style, Palatino, Georgia, serif"
-        font-size="24" fill="#14161c" letter-spacing="-0.3">Signal</text>
+  <text class="word" x="34" y="32" font-family="Iowan Old Style, Palatino, Georgia, serif"
+        font-size="24" letter-spacing="-0.3">Signal</text>
 </svg>
