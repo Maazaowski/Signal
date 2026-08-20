@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48" role="img" aria-label="Signal">
+  <g transform="translate(4,14)" fill="none" stroke="#0f5f4e" stroke-linecap="round">
+    <path d="M3 16.5v-2.4M7 16.5v-4M15.5 16.5v-3.2" stroke-width="1.8" opacity=".45"/>
+    <path d="M11.2 16.5V7.4" stroke-width="2"/>
+    <circle cx="11.2" cy="4.3" r="2.3" fill="#0f5f4e" stroke="none"/>
+  </g>
+  <text x="34" y="32" font-family="Iowan Old Style, Palatino, Georgia, serif"
+        font-size="24" fill="#14161c" letter-spacing="-0.3">Signal</text>
+</svg>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Companies · {{ product_name }}{% endblock %}
+{% block heading %}Companies{% endblock %}
+{% block where %}<span id="co-where"></span>{% endblock %}
+{% block sheet_class %}wide{% endblock %}
+
+{% block actions %}
+  <button class="btn btn-quiet btn-sm" id="btn-add" disabled data-wire>
+    <svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg> Add
+  </button>
+  <button class="btn" id="btn-seed" disabled data-wire>Add curated list</button>
+  <button class="btn btn-primary" id="btn-detect" title="Work out which companies publish a job board we can read" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg> Find job boards
+  </button>
+  <button class="btn" id="btn-crawl" disabled data-wire>Crawl now</button>
+{% endblock %}
+
+{% block content %}
+
+<div id="board-notice"></div>
+<div id="live"></div>
+
+<div class="cols cols-3" id="co-figures"></div>
+
+<div class="filters">
+  <div class="field grow">
+    <label for="f-q">Search</label>
+    <div class="seek">
+      <svg class="ico ico-sm" aria-hidden="true"><use href="#i-search"/></svg>
+      <input class="in" id="f-q" placeholder="Name, domain or tag">
+    </div>
+  </div>
+  <div class="field">
+    <label for="f-board">Job board</label>
+    <select class="in" id="f-board">
+      <option value="">Any</option>
+      <option value="greenhouse">Greenhouse</option>
+      <option value="lever">Lever</option>
+      <option value="ashby">Ashby</option>
+      <option value="html">Career page</option>
+      <option value="unknown">None found</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-state">State</label>
+    <select class="in" id="f-state">
+      <option value="">Any</option>
+      <option value="active">Being crawled</option>
+      <option value="paused">Paused</option>
+      <option value="failed">Failing</option>
+    </select>
+  </div>
+  <button class="btn btn-quiet" id="btn-clear" disabled data-wire>Clear</button>
+</div>
+
+<section class="panel">
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th>Company</th><th>Job board</th><th>State</th>
+        <th class="right">Roles</th><th>Last crawled</th><th class="right"></th>
+      </tr></thead>
+      <tbody id="co-rows"></tbody>
+    </table>
+  </div>
+  <div class="panel-ft"><span class="quiet" id="co-count"></span></div>
+</section>
+
+<div class="dialog" id="co-editor" role="dialog" aria-modal="true" aria-labelledby="co-editor-title">
+  <div class="pane-hd">
+    <h2 class="pane-title grow" id="co-editor-title">Add a company</h2>
+    <button class="btn btn-quiet btn-ico" onclick="closePanel('co-editor')" aria-label="Close">
+      <svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+  <div class="pane-bd stack-4">
+    <div class="field"><label for="c-name">Name</label>
+      <input class="in" id="c-name" placeholder="Acme"></div>
+    <div class="field"><label for="c-domain">Domain</label>
+      <input class="in" id="c-domain" placeholder="acme.com">
+      <span class="note">Used to guess the job-board address when finding boards.</span></div>
+    <div class="field"><label for="c-board">Job board</label>
+      <select class="in" id="c-board">
+        <option value="unknown">Work it out for me</option>
+        <option value="greenhouse">Greenhouse</option>
+        <option value="lever">Lever</option>
+        <option value="ashby">Ashby</option>
+        <option value="html">Plain career page</option>
+      </select></div>
+    <div class="field"><label for="c-slug">Board name</label>
+      <input class="in" id="c-slug" placeholder="acme">
+      <span class="note">The identifier in the board URL, for example
+        <span class="mono">boards.greenhouse.io/<strong>acme</strong></span>.</span></div>
+    <div class="field"><label for="c-careers">Career page</label>
+      <input class="in" id="c-careers" placeholder="https://acme.com/careers">
+      <span class="note">Only needed for a plain career page.</span></div>
+    <div class="field"><label for="c-tags">Tags</label>
+      <input class="in" id="c-tags" placeholder="saas, remote-friendly"></div>
+  </div>
+  <div class="pane-ft">
+    <button class="btn push" onclick="closePanel('co-editor')">Cancel</button>
+    <button class="btn btn-primary" id="btn-save-co" disabled data-wire>Save</button>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/companies.js?v={{ v }}"></script>{% endblock %}

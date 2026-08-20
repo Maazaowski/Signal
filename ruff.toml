@@ -1,0 +1,25 @@
+# Lint configuration for Signal.
+line-length = 100
+target-version = "py311"
+
+exclude = [".venv", "__pycache__", ".pytest_cache", "docs"]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes: undefined names, unused imports
+    "W",    # pycodestyle warnings
+    "I",    # import sorting
+    "UP",   # pyupgrade: outdated syntax
+    "B",    # bugbear: likely bugs
+    "C4",   # comprehension clarity
+]
+ignore = [
+    "E501",  # line length is handled by the formatter, not enforced here
+    "B008",  # FastAPI's Depends()/Query() defaults are the framework's idiom
+]
+
+[lint.per-file-ignores]
+# Tests use pytest fixtures that read as unused arguments, and import for
+# side effects (env setup before config is imported).
+"tests/*" = ["F811", "F401"]

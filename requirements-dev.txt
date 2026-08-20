@@ -1,0 +1,15 @@
+# Development and CI only. Install with:
+#   pip install -r requirements-dev.txt
+#   playwright install chromium
+#
+# The test suite drives a real browser, so `playwright` is pinned explicitly
+# alongside the pytest plugin: the plugin's floor is loose, and the downloaded
+# browser has to match the driver. That pin is also the CI cache key.
+
+-r requirements.txt
+
+pytest==9.1.1
+pytest-playwright==0.9.0
+playwright==1.62.0
+ruff==0.16.3
+pip-audit==2.10.1

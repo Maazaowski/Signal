@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so pip-audit reports new CVEs against the pinned set without
+    # waiting for the next push.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      # README claims 3.11 or newer, so both ends of that claim get tested.
+      # 3.12 is what the development machine runs.
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      # First, because it fails in seconds and saves the browser install below.
+      - name: Lint
+        run: ruff check .
+
+      - name: Resolve Playwright version
+        id: pw
+        run: |
+          echo "version=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-playwright-${{ steps.pw.outputs.version }}
+
+      # Run even on a cache hit: the cache holds the Chromium binary, not the
+      # system libraries it links against, and a warm cache without them fails
+      # with a missing-shared-library error that no cold run reproduces.
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      # tests/conftest.py forces RAPIDAPI_KEY="" and points JOBS_DB_PATH at a
+      # temp file, so the suite cannot spend API quota or touch real data.
+      - name: Test
+        run: pytest
+
+      - name: Audit dependencies
+        run: pip-audit

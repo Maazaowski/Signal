@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ product_name }}{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><g stroke='%231B6353' stroke-width='1.7' stroke-linecap='round'><path d='M3 16.5v-2.4M7 16.5v-4M15.5 16.5v-3.2' opacity='.45'/><path d='M11.2 16.5V7.4'/></g><circle cx='11.2' cy='4.3' r='2.1' fill='%231B6353'/></svg>">
+  <link rel="stylesheet" href="/static/css/tokens.css?v={{ v }}">
+  <link rel="stylesheet" href="/static/css/base.css?v={{ v }}">
+  <link rel="stylesheet" href="/static/css/components.css?v={{ v }}">
+  <script src="/static/js/core.js?v={{ v }}"></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+{% include "_icons.html" %}
+
+<div class="app">
+
+  <aside class="rail">
+    <a href="/" class="brand">
+      <svg class="mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span class="brand-name" data-product-name>{{ product_name }}</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="/"          class="nav-item {% if page == 'today' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-today"/></svg> Today</a>
+      <a href="/roles"     class="nav-item {% if page == 'roles' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-roles"/></svg> Roles
+        <span class="tally" id="tally-roles"></span></a>
+      <a href="/intros"    class="nav-item {% if page == 'intros' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-intros"/></svg> Intros
+        <span class="tally" id="tally-intros"></span></a>
+      <a href="/companies" class="nav-item {% if page == 'companies' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-companies"/></svg> Companies
+        <span class="tally" id="tally-companies"></span></a>
+
+      <div class="nav-group">System</div>
+      <a href="/activity"  class="nav-item {% if page == 'activity' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-activity"/></svg> Activity
+        <span class="tally" id="tally-activity"></span></a>
+      <a href="/settings"  class="nav-item {% if page == 'settings' %}active{% endif %}">
+        <svg class="ico" aria-hidden="true"><use href="#i-settings"/></svg> Settings</a>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="split">
+        <span id="health-pill" class="quiet" style="font-size:var(--t-xs)">Checking…</span>
+        <button class="btn btn-quiet btn-ico btn-sm" id="theme-btn"
+                title="Change theme" aria-label="Change theme">
+          <svg class="ico ico-sm" aria-hidden="true"><use href="#i-sun" id="theme-icon"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="bar">
+      <h1 class="display">{% block heading %}{% endblock %}</h1>
+      <span class="where">{% block where %}{% endblock %}</span>
+      <div class="bar-actions">{% block actions %}{% endblock %}</div>
+    </header>
+
+    <div class="sheet {% block sheet_class %}{% endblock %}">
+      <div id="alerts"></div>
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Theme ────────────────────────────────────────────────
+  function paintThemeButton() {
+    const m = theme.get();
+    const use = document.querySelector('#theme-btn use');
+    if (use) use.setAttribute('href', m === 'dark' ? '#i-moon' : m === 'light' ? '#i-sun' : '#i-auto');
+    document.getElementById('theme-btn').title =
+      m === 'system' ? 'Theme: match system' : `Theme: ${m}`;
+  }
+  document.getElementById('theme-btn').onclick = () => { theme.cycle(); paintThemeButton(); };
+  paintThemeButton();
+
+  // ── Health ───────────────────────────────────────────────
+  // Polled on every page, so a degraded service can never go unnoticed. The
+  // banner names each problem and, where there is one, the place to fix it.
+  async function refreshChrome() {
+    try {
+      const s = await api('/system');
+      window.__system = s;
+
+      if (s.product_name) {
+        document.querySelectorAll('[data-product-name]').forEach(n => n.textContent = s.product_name);
+        const base = document.title.split('·').pop().trim();
+        if (base && base !== s.product_name) document.title =
+          document.title.replace(/[^·]+$/, ' ' + s.product_name);
+      }
+
+      const pill = document.getElementById('health-pill');
+      pill.innerHTML = s.healthy
+        ? `<span class="tag tag-good"><span class="pip"></span>Running</span>`
+        : `<span class="tag tag-caution"><span class="pip"></span>${s.warnings.length} to fix</span>`;
+
+      const alerts = document.getElementById('alerts');
+      if (alerts) {
+        alerts.innerHTML = s.warnings.length ? `
+          <div class="notice notice-caution">
+            <svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg>
+            <div>
+              <strong>${s.warnings.length === 1 ? 'One thing needs attention' : s.warnings.length + ' things need attention'}</strong>
+              <ul>${s.warnings.map(w => `<li>${text(w)}</li>`).join('')}</ul>
+            </div>
+          </div>` : '';
+      }
+
+      const act = document.getElementById('tally-activity');
+      if (act) act.innerHTML = s.active_run
+        ? '<span class="pip pip-live" style="color:var(--accent)"></span>' : '';
+
+      const roles = document.getElementById('tally-roles');
+      if (roles) roles.textContent = s.database.jobs ? fmt.num(s.database.jobs) : '';
+
+      document.dispatchEvent(new CustomEvent('system', { detail: s }));
+      return s;
+    } catch (e) {
+      const pill = document.getElementById('health-pill');
+      if (pill) pill.innerHTML = '<span class="tag tag-critical"><span class="pip"></span>Not responding</span>';
+      const alerts = document.getElementById('alerts');
+      if (alerts) alerts.innerHTML = `
+        <div class="notice notice-critical">
+          <svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg>
+          <div><strong>Can't reach ${text((window.__system || {}).product_name || 'the app')}</strong>
+          It may have stopped. Start it again and this page will reconnect on its own.</div>
+        </div>`;
+    }
+  }
+  poll(refreshChrome, 5000);
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

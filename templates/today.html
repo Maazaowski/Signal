@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Today · {{ product_name }}{% endblock %}
+{% block heading %}Today{% endblock %}
+{% block where %}<span id="date-line"></span>{% endblock %}
+
+{% block actions %}
+  <button class="btn" id="btn-full" title="Find roles, write intros, then send the digest" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-auto"/></svg> Run everything
+  </button>
+  <button class="btn btn-primary" id="btn-find" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg> Find roles
+  </button>
+{% endblock %}
+
+{% block content %}
+
+<div id="live"></div>
+
+{# The lead. One sentence saying what today looks like, then the shortlist.
+   Not four stat tiles — the point of this page is what to do next. #}
+<section class="stack-4">
+  <p class="lede" id="lede"><span class="ghost" style="width:60%;height:22px;display:block"></span></p>
+  <div class="row wrap quiet" id="lede-detail" style="gap:var(--s5)"></div>
+</section>
+
+<section class="panel">
+  <div class="panel-hd">
+    <h2 class="card-title">Worth a look</h2>
+    <span class="where quiet" id="shortlist-note"></span>
+    <a href="/roles" class="btn btn-quiet btn-sm push">All roles
+      <svg class="ico ico-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </div>
+  <div class="listing" id="shortlist"></div>
+</section>
+
+<div class="cols cols-side">
+  <section class="panel">
+    <div class="panel-hd">
+      <h2 class="card-title">Recent activity</h2>
+      <a href="/activity" class="btn btn-quiet btn-sm push">History
+        <svg class="ico ico-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="panel-bd" id="recent"></div>
+  </section>
+
+  <section class="stack-4">
+    <div class="panel">
+      <div class="panel-hd"><h2 class="card-title">Next run</h2></div>
+      <div class="panel-bd" id="next-run"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><h2 class="card-title">Search allowance</h2></div>
+      <div class="panel-bd" id="allowance"></div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/today.js?v={{ v }}"></script>{% endblock %}

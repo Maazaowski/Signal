@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Intros · {{ product_name }}{% endblock %}
+{% block heading %}Intros{% endblock %}
+{% block where %}<span id="intros-where"></span>{% endblock %}
+
+{% block actions %}
+  <button class="btn" id="btn-write" title="Write intros for the best roles collected so far" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg> Write intros
+  </button>
+  <button class="btn" id="btn-preview" disabled data-wire>Preview digest</button>
+  <button class="btn btn-primary" id="btn-send" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-intros"/></svg> Send digest
+  </button>
+{% endblock %}
+
+{% block content %}
+
+<div id="live"></div>
+
+<div class="filters">
+  <div class="field grow">
+    <label for="f-q">Search</label>
+    <div class="seek">
+      <svg class="ico ico-sm" aria-hidden="true"><use href="#i-search"/></svg>
+      <input class="in" id="f-q" placeholder="Company or role">
+    </div>
+  </div>
+  <div class="field">
+    <label for="f-stage">Stage</label>
+    <select class="in" id="f-stage">
+      <option value="">All</option>
+      <option value="pending" selected>Not sent yet</option>
+      <option value="emailed">In the digest</option>
+      <option value="messaged">Sent on LinkedIn</option>
+      <option value="replied">Replied</option>
+      <option value="followed_up">Followed up</option>
+    </select>
+  </div>
+  <button class="btn btn-quiet" id="btn-clear" disabled data-wire>Clear</button>
+</div>
+
+<div id="intros"></div>
+
+<div class="dialog" id="preview" role="dialog" aria-modal="true" aria-labelledby="pv-title">
+  <div class="pane-hd">
+    <h2 class="pane-title grow" id="pv-title">Digest preview</h2>
+    <button class="btn btn-quiet btn-ico" onclick="closePanel('preview')" aria-label="Close">
+      <svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+  <div class="pane-bd" id="pv-body"></div>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/intros.js?v={{ v }}"></script>{% endblock %}

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Settings · {{ product_name }}{% endblock %}
+{% block heading %}Settings{% endblock %}
+{% block where %}<span id="set-where"></span>{% endblock %}
+
+{% block content %}
+
+<div id="live"></div>
+
+<div class="cols" style="grid-template-columns:186px minmax(0,1fr);gap:var(--s8);align-items:start">
+
+  <nav class="subnav" id="sections" style="position:sticky;top:calc(var(--bar) + var(--s6))">
+    <button class="active" data-sec="targeting">What you want</button>
+    <button data-sec="scoring">How it scores</button>
+    <button data-sec="places">Where you can work</button>
+    <button data-sec="pitch">Your pitch</button>
+    <button data-sec="searches">Saved searches</button>
+    <button data-sec="profiles">Profiles</button>
+    <button data-sec="schedule">Schedule</button>
+    <button data-sec="email">Email delivery</button>
+    <button data-sec="integrations">Integrations</button>
+    <button data-sec="data">Data &amp; crawling</button>
+    <button data-sec="brand">Appearance</button>
+  </nav>
+
+  <div>
+    <section data-sec-body="targeting" class="stack-6">
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">What you want</h2>
+        <p class="quiet" style="margin-top:var(--s2)">Used to score every role that comes in.</p>
+      </div>
+      <div class="panel"><div class="panel-bd stack-6">
+        <div class="field"><label>Titles worth a look</label>
+          <span class="note">A role whose title contains any of these scores higher.</span>
+          <div class="chips" data-path="search.title_keywords_positive"></div></div>
+        <div class="field"><label>Titles to avoid</label>
+          <span class="note">Heavily penalised. This is how junior and off-discipline roles get filtered out.</span>
+          <div class="chips" data-path="search.title_keywords_negative"></div></div>
+        <div class="field"><label>Technologies you care about</label>
+          <span class="note">Matched against the description to work out what each role uses.</span>
+          <div class="chips" data-path="search.relevant_tech"></div></div>
+      </div></div>
+    </section>
+
+    <section data-sec-body="scoring" class="stack-6" hidden>
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">How it scores</h2>
+        <p class="quiet" style="margin-top:var(--s2)">Changes apply to new roles immediately. Use
+          <strong>Reapply scoring</strong> below to update roles already collected.</p>
+      </div>
+      <div class="panel"><div class="panel-bd stack-6">
+        <div class="cols cols-2">
+          <div class="field"><label for="s-exp">Seniority you are aiming for</label>
+            <select class="in" id="s-exp" data-path="scoring.experience_target">
+              <option value="fresher">Entry level</option>
+              <option value="junior">Junior, 1 to 2 years</option>
+              <option value="mid">Mid, 3 to 5 years</option>
+              <option value="senior">Senior, 6 years or more</option>
+              <option value="any">No preference</option>
+            </select></div>
+          <div class="field"><label for="s-keep">Discard anything scoring below</label>
+            <input class="in" type="number" id="s-keep" min="0" max="100" data-path="scoring.min_score_to_store">
+            <span class="note">Applied while collecting, so low scorers never reach the database.</span></div>
+        </div>
+        <div class="field"><label>Weighting <span class="quiet" id="weight-total"></span></label>
+          <span class="note">How much each factor contributes. Conventionally these total 100.</span>
+          <div class="cols cols-3" style="gap:var(--s3);margin-top:var(--s2)">
+            <div class="field"><label for="w-t" class="quiet">Title</label>
+              <input class="in" type="number" id="w-t" data-path="scoring.weights.title"></div>
+            <div class="field"><label for="w-h" class="quiet">Technology</label>
+              <input class="in" type="number" id="w-h" data-path="scoring.weights.tech"></div>
+            <div class="field"><label for="w-e" class="quiet">Seniority</label>
+              <input class="in" type="number" id="w-e" data-path="scoring.weights.experience"></div>
+            <div class="field"><label for="w-s" class="quiet">Other signals</label>
+              <input class="in" type="number" id="w-s" data-path="scoring.weights.signal"></div>
+          </div></div>
+        <div class="field"><label>Your core stack</label>
+          <span class="note">Worth considerably more than a passing mention of something adjacent.</span>
+          <div class="chips" data-path="scoring.core_tech"></div></div>
+        <div class="field"><label>Phrases that suggest the right kind of work</label>
+          <div class="chips" data-path="scoring.backend_signals"></div></div>
+      </div></div>
+      <div class="panel"><div class="panel-ft" style="border-top:0;border-radius:var(--r)">
+        <span class="quiet">Roles already collected keep their old score until you reapply.</span>
+        <button class="btn push" id="btn-rescore" disabled data-wire>Reapply scoring</button>
+      </div></div>
+    </section>
+
+    <section data-sec-body="places" class="stack-6" hidden>
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">Where you can work</h2>
+        <p class="quiet" style="margin-top:var(--s2)">Checked in order. The first rule that matches decides.</p>
+      </div>
+      <div class="panel"><div class="panel-bd stack-6">
+        <div class="field"><label>1 &middot; Rules the role out entirely</label>
+          <span class="note">Beats every positive signal. Phrases like "US only" belong here.</span>
+          <div class="chips" data-path="location.india_negative"></div></div>
+        <div class="field"><label>2 &middot; Your country and cities</label>
+          <span class="note">A match scores the role <strong>Open to you</strong>.</span>
+          <div class="chips" data-path="location.home_terms"></div></div>
+        <div class="field"><label>3 &middot; Genuinely worldwide</label>
+          <span class="note">Keep these specific. Generic words such as "global" appear in ordinary
+            company boilerplate and wrongly mark local roles as open.</span>
+          <div class="chips" data-path="location.global_terms"></div></div>
+        <div class="field"><label>4 &middot; Wider regions that include you</label>
+          <div class="chips" data-path="location.region_terms"></div></div>
+        <div class="field"><label>5 &middot; Places you cannot work</label>
+          <span class="note">A concrete location naming one of these scores <strong>Not open</strong>.</span>
+          <div class="chips" data-path="location.excluded_regions"></div></div>
+        <div class="field"><label>Weaker hints</label>
+          <span class="note">A match here alone scores only <strong>Possibly</strong>.</span>
+          <div class="chips" data-path="location.india_positive"></div></div>
+        <div class="cols cols-2">
+          <div class="field"><label>Timezones that work</label>
+            <div class="chips" data-path="location.timezone_compatible"></div></div>
+          <div class="field"><label>Timezones that do not</label>
+            <div class="chips" data-path="location.timezone_incompatible"></div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-sec-body="pitch" class="stack-6" hidden>
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">Your pitch</h2>
+        <p class="quiet" style="margin-top:var(--s2)">Used to write every intro. Placeholders available:
+          <span class="mono">{greeting} {company} {title} {stack} {bio_short} {achievements} {candidate_name}</span></p>
+      </div>
+      <div class="panel"><div class="panel-bd stack-6">
+        <div class="cols cols-2">
+          <div class="field"><label for="o-name">Your name</label>
+            <input class="in" id="o-name" data-path="outreach.candidate_name"></div>
+          <div class="field"><label for="o-to">Send the digest to</label>
+            <input class="in" id="o-to" data-path="outreach.recipient_email" placeholder="you@example.com">
+            <span class="note">Overrides the address in Email delivery, for this profile only.</span></div>
+        </div>
+        <div class="field"><label for="o-bio">One line about you</label>
+          <input class="in" id="o-bio" data-path="outreach.bio_short">
+          <span class="note">A single clause. The connection note is capped at 300 characters.</span></div>
+        <div class="field"><label>What you have done</label>
+          <span class="note">Numbers land better than adjectives.</span>
+          <div class="chips chips-long" data-path="outreach.achievements"></div></div>
+        <div class="cols cols-2">
+          <div class="field"><label>Your core stack, for {stack}</label>
+            <div class="chips" data-path="outreach.candidate_core_tech"></div></div>
+          <div class="field"><label>Also comfortable with</label>
+            <div class="chips" data-path="outreach.candidate_extra_tech"></div></div>
+        </div>
+        <div class="field"><label for="o-short">Connection note <span class="quiet" id="note-len"></span></label>
+          <textarea class="in" id="o-short" data-path="outreach.dm_short_template" style="min-height:74px"></textarea></div>
+        <div class="field"><label for="o-long">Longer message</label>
+          <textarea class="in" id="o-long" data-path="outreach.dm_long_template" style="min-height:180px"></textarea></div>
+        <div class="field"><label>How it reads</label>
+          <div class="log" style="max-height:none" id="pitch-preview">&mdash;</div></div>
+      </div></div>
+    </section>
+
+    <section data-sec-body="searches" class="stack-6" hidden>
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">Saved searches</h2>
+        <p class="quiet" style="margin-top:var(--s2)" id="search-cost"></p>
+      </div>
+      <div class="panel">
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>Search</th><th>Country</th><th>Posted within</th><th>Remote only</th><th></th></tr></thead>
+          <tbody id="search-rows"></tbody>
+        </table></div>
+        <div class="panel-ft" style="flex-wrap:wrap;gap:var(--s2)">
+          <input class="in" id="q-new" placeholder="senior python engineer" style="flex:1 1 220px">
+          <select class="in" id="q-country" style="width:auto">
+            <option value="PK">Pakistan</option><option value="AE">UAE</option>
+            <option value="SA">Saudi Arabia</option><option value="US">United States</option>
+            <option value="GB">United Kingdom</option><option value="CA">Canada</option>
+            <option value="DE">Germany</option><option value="SG">Singapore</option>
+            <option value="IN">India</option>
+          </select>
+          <select class="in" id="q-when" style="width:auto">
+            <option value="today">Today</option><option value="3days">3 days</option>
+            <option value="week" selected>A week</option><option value="month">A month</option>
+          </select>
+          <label class="toggle"><input type="checkbox" id="q-remote"> Remote only</label>
+          <button class="btn btn-primary" id="btn-add-q" disabled data-wire>Add</button>
+        </div>
+      </div>
+    </section>
+
+    <section data-sec-body="profiles" class="stack-6" hidden>
+      <div>
+        <h2 class="display" style="font-size:var(--t-xl)">Profiles</h2>
+        <p class="quiet" style="margin-top:var(--s2)">A profile bundles everything above. Switching one
+          retargets the whole system.</p>
+      </div>
+      <div class="cols cols-2">
+        <div class="panel"><div class="panel-hd"><h3 class="card-title">Saved</h3></div>
+          <div class="panel-bd" id="profile-list"></div></div>
+        <div class="panel"><div class="panel-hd"><h3 class="card-title">Starting points</h3></div>
+          <div class="panel-bd" id="preset-list"></div></div>
+      </div>
+    </section>
+
+    <!-- Built from the settings schema, so a new setting needs no markup here -->
+    <section data-sec-body="schedule" class="stack-6" hidden data-group="schedule"></section>
+    <section data-sec-body="email" class="stack-6" hidden data-group="email"></section>
+    <section data-sec-body="integrations" class="stack-6" hidden data-group="integrations"></section>
+    <section data-sec-body="data" class="stack-6" hidden data-group="data,crawl"></section>
+    <section data-sec-body="brand" class="stack-6" hidden data-group="brand"></section>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/settings.js?v={{ v }}"></script>{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Activity · {{ product_name }}{% endblock %}
+{% block heading %}Activity{% endblock %}
+{% block where %}<span id="act-where"></span>{% endblock %}
+
+{% block actions %}
+  <select class="in" id="run-kind" style="width:auto">
+    <option value="collect">Find roles</option>
+    <option value="pipeline">Full run</option>
+    <option value="crawl">Crawl company boards</option>
+    <option value="detect_ats">Find job boards</option>
+    <option value="outreach">Write intros</option>
+    <option value="email">Send digest</option>
+    <option value="rescore">Reapply scoring</option>
+    <option value="discover">Discover companies</option>
+  </select>
+  <button class="btn btn-primary" id="btn-run" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-run"/></svg> Run
+  </button>
+{% endblock %}
+
+{% block content %}
+
+<section class="panel" id="live-panel" hidden>
+  <div class="panel-hd">
+    <h2 class="card-title grow">Running now</h2>
+    <span id="live-tag"></span>
+    <button class="btn btn-warn btn-sm" id="btn-stop" disabled data-wire>Stop</button>
+  </div>
+  <div class="panel-bd">
+    <div class="split" style="margin-bottom:var(--s2)">
+      <strong id="live-what">—</strong>
+      <span class="quiet nums" id="live-count"></span>
+    </div>
+    <div class="meter"><div class="meter-fill" id="live-bar" style="width:0%"></div></div>
+    <div class="log" id="live-log" style="margin-top:var(--s5)"></div>
+  </div>
+</section>
+
+<div class="cols cols-side">
+  <section class="panel">
+    <div class="panel-hd">
+      <h2 class="card-title grow">History</h2>
+      <select class="in" id="f-state" style="width:auto">
+        <option value="">Everything</option>
+        <option value="success">Finished</option>
+        <option value="failed">Failed</option>
+        <option value="cancelled">Stopped</option>
+      </select>
+    </div>
+    <div class="panel-bd" id="history"></div>
+  </section>
+
+  <section class="stack-4">
+    <div class="panel">
+      <div class="panel-hd"><h2 class="card-title grow">Schedule</h2><span id="sched-tag"></span></div>
+      <div class="panel-bd" id="sched"></div>
+      <div class="panel-ft">
+        <button class="btn btn-sm" id="btn-sched" disabled data-wire>Pause</button>
+        <a class="btn btn-quiet btn-sm push" href="/settings">Change</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd"><h2 class="card-title">Services</h2></div>
+      <div class="panel-bd" id="services"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd"><h2 class="card-title">Digests sent</h2></div>
+      <div class="panel-bd" id="sends"></div>
+    </div>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-hd">
+    <h2 class="card-title grow">Application log</h2>
+    <span class="quiet" style="font-size:var(--t-sm)">Live — the same output as the console</span>
+  </div>
+  <div class="panel-bd"><div class="log" id="app-log"></div></div>
+</section>
+
+<div class="aside" id="run-pane" role="dialog" aria-modal="true" aria-labelledby="rd-title">
+  <div class="pane-hd">
+    <div class="grow">
+      <h2 class="pane-title" id="rd-title">Run</h2>
+      <div class="quiet" id="rd-sub" style="font-size:var(--t-sm);margin-top:2px"></div>
+    </div>
+    <button class="btn btn-quiet btn-ico" onclick="closePanel('run-pane')" aria-label="Close">
+      <svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+  <div class="pane-bd" id="rd-body"></div>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/activity.js?v={{ v }}"></script>{% endblock %}

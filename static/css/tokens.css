@@ -1,0 +1,166 @@
+/* ── Signal — design tokens ───────────────────────────────────
+
+   Ink on paper, not pixels on a dashboard. The palette is warm and low-chroma
+   so that the one accent and the three status colours are the only things that
+   ever pull the eye — which matters in a product whose whole job is telling you
+   which six of two thousand roles are worth reading.
+
+   Status colours are earthy (sage / ochre / terracotta) rather than the usual
+   green-amber-red. They read as considered rather than alarming, and they sit
+   comfortably beside the accent instead of fighting it.
+
+   Light is the base. Dark is defined twice on purpose: under prefers-color-scheme
+   guarded so an explicit light choice still wins, and again under [data-theme]
+   so the toggle beats the OS. Dark is a real second palette — warm charcoal,
+   not inverted greys.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Paper */
+  --paper:      #FCFBF8;
+  --surface:    #FFFFFF;
+  --surface-2:  #F5F3EE;
+  --surface-3:  #EBE7DF;
+  --scrim:      rgba(28, 27, 24, 0.32);
+
+  /* Rules */
+  --rule:       #E6E1D7;
+  --rule-firm:  #D2CCBF;
+
+  /* Ink */
+  --ink:        #1C1B18;
+  --ink-2:      #56534B;
+  --ink-3:      #8B857A;
+  --ink-on-dark:#FCFBF8;
+
+  /* Accent — deep forest teal */
+  --accent:     #1B6353;
+  --accent-lift:#155044;
+  --accent-wash:#E7F0EC;
+  --accent-ink: #124B3F;
+
+  /* Status — earthy, deliberately not traffic lights */
+  --good:       #2E6A4F;
+  --good-wash:  #E7F0E9;
+  --caution:    #8E6316;
+  --caution-wash:#F7EEDC;
+  --critical:   #9E3D2C;
+  --critical-wash:#F8E9E5;
+  --neutral-wash:#EFECE5;
+
+  /* Type */
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+           "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Consolas,
+          "Liberation Mono", monospace;
+
+  --t-xs:   11.5px;
+  --t-sm:   12.5px;
+  --t-base: 13.5px;
+  --t-md:   15px;
+  --t-lg:   17px;
+  --t-xl:   21px;
+  --t-2xl:  27px;
+  --t-3xl:  34px;
+  --t-4xl:  44px;
+
+  --lh-tight: 1.18;
+  --lh-snug:  1.35;
+  --lh-body:  1.6;
+
+  /* Space — 4px grid */
+  --s1: 4px;   --s2: 8px;   --s3: 12px;  --s4: 16px;
+  --s5: 20px;  --s6: 24px;  --s7: 28px;  --s8: 32px;
+  --s10: 40px; --s12: 48px; --s16: 64px; --s20: 80px;
+
+  /* Radius — restrained; this is paper, not plastic */
+  --r-sm: 4px;
+  --r:    7px;
+  --r-lg: 11px;
+  --r-pill: 999px;
+
+  /* Elevation — rules do most of the work */
+  --lift-sm: 0 1px 2px rgba(28, 27, 24, 0.045);
+  --lift:    0 2px 4px rgba(28, 27, 24, 0.05), 0 8px 20px rgba(28, 27, 24, 0.045);
+  --lift-lg: 0 12px 44px rgba(28, 27, 24, 0.14);
+
+  --focus: 0 0 0 3px rgba(27, 99, 83, 0.2);
+
+  --rail: 232px;
+  --bar:  60px;
+
+  --ease: cubic-bezier(0.32, 0.08, 0.24, 1);
+  --fast: 130ms var(--ease);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #131210;
+    --surface:    #1A1917;
+    --surface-2:  #221F1C;
+    --surface-3:  #2C2926;
+    --scrim:      rgba(0, 0, 0, 0.58);
+
+    --rule:       #2B2825;
+    --rule-firm:  #3B3733;
+
+    --ink:        #EFEBE3;
+    --ink-2:      #A9A296;
+    --ink-3:      #7B756A;
+    --ink-on-dark:#131210;
+
+    --accent:     #57A48D;
+    --accent-lift:#6FBAA2;
+    --accent-wash:#152A25;
+    --accent-ink: #8FCDB8;
+
+    --good:       #67AC85;
+    --good-wash:  #16271C;
+    --caution:    #C79445;
+    --caution-wash:#2A2114;
+    --critical:   #D2705C;
+    --critical-wash:#2C1914;
+    --neutral-wash:#26231F;
+
+    --lift-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --lift:    0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
+    --lift-lg: 0 12px 44px rgba(0, 0, 0, 0.55);
+    --focus: 0 0 0 3px rgba(87, 164, 141, 0.26);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #131210;
+  --surface:    #1A1917;
+  --surface-2:  #221F1C;
+  --surface-3:  #2C2926;
+  --scrim:      rgba(0, 0, 0, 0.58);
+
+  --rule:       #2B2825;
+  --rule-firm:  #3B3733;
+
+  --ink:        #EFEBE3;
+  --ink-2:      #A9A296;
+  --ink-3:      #7B756A;
+  --ink-on-dark:#131210;
+
+  --accent:     #57A48D;
+  --accent-lift:#6FBAA2;
+  --accent-wash:#152A25;
+  --accent-ink: #8FCDB8;
+
+  --good:       #67AC85;
+  --good-wash:  #16271C;
+  --caution:    #C79445;
+  --caution-wash:#2A2114;
+  --critical:   #D2705C;
+  --critical-wash:#2C1914;
+  --neutral-wash:#26231F;
+
+  --lift-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --lift:    0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
+  --lift-lg: 0 12px 44px rgba(0, 0, 0, 0.55);
+  --focus: 0 0 0 3px rgba(87, 164, 141, 0.26);
+}

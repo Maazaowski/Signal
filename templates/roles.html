@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Roles · {{ product_name }}{% endblock %}
+{% block heading %}Roles{% endblock %}
+{% block where %}<span id="roles-where"></span>{% endblock %}
+
+{% block actions %}
+  <button class="btn btn-quiet btn-sm" id="btn-export" title="Send the current view to Google Sheets" disabled data-wire>Export</button>
+  <button class="btn btn-primary" id="btn-find" disabled data-wire>
+    <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg> Find roles
+  </button>
+{% endblock %}
+
+{% block content %}
+
+<div id="live"></div>
+
+<div class="filters">
+  <div class="field grow">
+    <label for="f-q">Search</label>
+    <div class="seek">
+      <svg class="ico ico-sm" aria-hidden="true"><use href="#i-search"/></svg>
+      <input class="in" id="f-q" placeholder="Title, company or description">
+    </div>
+  </div>
+  <div class="field">
+    <label for="f-open">Availability</label>
+    <select class="in" id="f-open">
+      <option value="maybe" selected>Open or possible</option>
+      <option value="yes">Open to you only</option>
+      <option value="">Everything</option>
+      <option value="no">Not open</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-score">Minimum score</label>
+    <select class="in" id="f-score">
+      <option value="0">Any</option>
+      <option value="30">30</option>
+      <option value="45" selected>45</option>
+      <option value="60">60</option>
+      <option value="70">70</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-state">Stage</label>
+    <select class="in" id="f-state">
+      <option value="">Any</option>
+      <option value="new">Unread</option>
+      <option value="reviewed">Read</option>
+      <option value="applied">Applied</option>
+      <option value="stale">Set aside</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-src">Source</label>
+    <select class="in" id="f-src"><option value="">Any</option></select>
+  </div>
+  <button class="btn btn-quiet" id="btn-clear" disabled data-wire>Clear</button>
+</div>
+
+<section class="panel">
+  <div class="listing" id="roles"></div>
+  <div class="panel-ft">
+    <span class="quiet" id="roles-count"></span>
+    <div class="btns push">
+      <button class="btn btn-sm" id="btn-back" disabled data-wire>Back</button>
+      <button class="btn btn-sm" id="btn-more" disabled data-wire>More</button>
+    </div>
+  </div>
+</section>
+
+<div class="aside" id="role-pane" role="dialog" aria-modal="true" aria-labelledby="rp-title">
+  <div class="pane-hd">
+    <div class="grow">
+      <h2 class="pane-title" id="rp-title">Role</h2>
+      <div class="quiet" id="rp-sub" style="font-size:var(--t-sm);margin-top:2px"></div>
+    </div>
+    <button class="btn btn-quiet btn-ico" onclick="closePanel('role-pane')" aria-label="Close">
+      <svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+  <div class="pane-bd" id="rp-body"></div>
+  <div class="pane-ft" id="rp-foot"></div>
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="/static/js/roles.js?v={{ v }}"></script>{% endblock %}

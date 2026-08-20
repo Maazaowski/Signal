@@ -1,0 +1,283 @@
+name: "Backend Python — Senior (Pakistan + Remote)"
+description: "Senior/lead Python backend roles. Targets Pakistan-based and worldwide-remote postings. 4 JSearch queries to stay inside the 200/month free tier. Fill in the outreach section before use."
+schema_version: 1
+
+search:
+  default_terms:
+    - "senior backend developer python"
+    - "senior python engineer"
+    - "python django developer"
+    - "backend engineer python"
+    - "staff software engineer python"
+  title_keywords_positive:
+    - "backend"
+    - "back-end"
+    - "back end"
+    - "python"
+    - "django"
+    - "fastapi"
+    - "software engineer"
+    - "software developer"
+    - "full stack"
+    - "fullstack"
+    - "full-stack"
+    - "api developer"
+    # Seniority signals — these are what make this preset "senior"
+    - "senior"
+    - "lead"
+    - "staff"
+    - "principal"
+    - "architect"
+  title_keywords_negative:
+    - "frontend"
+    - "front-end"
+    - "front end"
+    - "ios"
+    - "android"
+    - "mobile"
+    - "devops"
+    - "data scientist"
+    - "machine learning"
+    - "ml engineer"
+    - "ui/ux"
+    - "designer"
+    - "qa"
+    - "test"
+    - "intern"
+    - "internship"
+    - "trainee"
+    - "junior"
+  relevant_tech:
+    - "python"
+    - "django"
+    - "fastapi"
+    - "flask"
+    - "celery"
+    - "redis"
+    - "postgresql"
+    - "postgres"
+    - "mysql"
+    - "mongodb"
+    - "docker"
+    - "kubernetes"
+    - "aws"
+    - "gcp"
+    - "rest"
+    - "graphql"
+    - "node"
+    - "nodejs"
+    - "express"
+    - "sql"
+    - "nosql"
+    - "microservices"
+    - "rabbitmq"
+    - "kafka"
+    - "elasticsearch"
+    - "terraform"
+    - "ci/cd"
+  # ⚠️ COST CONTROL: each query below = 1 RapidAPI call per collection run.
+  # Free tier is 200/month. 4 queries × ~30 days = ~120/month, leaving room for
+  # manual "Collect Jobs" clicks. Adding queries here directly costs quota.
+  # JSearch requires a country, so "worldwide remote" = country + remote_jobs_only.
+  jsearch_default_queries:
+    - { query: "senior python backend engineer", country: "PK", date_posted: "week", remote_jobs_only: false }
+    - { query: "python django developer", country: "PK", date_posted: "week", remote_jobs_only: false }
+    - { query: "senior backend engineer python remote", country: "US", date_posted: "week", remote_jobs_only: true }
+    - { query: "senior python developer remote", country: "GB", date_posted: "week", remote_jobs_only: true }
+
+scoring:
+  experience_target: "senior"
+  min_relevance_score: 50
+  min_score_to_store: 25
+  weights: { title: 35, tech: 35, experience: 15, signal: 15 }
+  core_tech:
+    - "python"
+    - "django"
+    - "fastapi"
+    - "flask"
+  backend_signals:
+    - "api"
+    - "backend"
+    - "back-end"
+    - "server-side"
+    - "microservice"
+    - "database"
+    - "rest"
+    - "graphql"
+    - "endpoint"
+    - "architecture"
+    - "scalability"
+    - "distributed"
+    - "mentor"
+    - "technical lead"
+
+location:
+  # Direct home-country mentions → scored "yes"
+  home_terms:
+    - "pakistan"
+    - "karachi"
+    - "lahore"
+    - "islamabad"
+    - "rawalpindi"
+    - "faisalabad"
+    - "multan"
+    - "peshawar"
+    - "quetta"
+    - "sialkot"
+    - "gujranwala"
+    - "abbottabad"
+    - "remote - pakistan"
+    - "remote pakistan"
+  # Genuinely worldwide postings → scored "yes".
+  # Deliberately NOT here: bare "global" and "fully remote". Both show up in
+  # ordinary company boilerplate ("a global leader in...") and marked
+  # London-only and Sydney-only roles as open to you.
+  global_terms:
+    - "worldwide"
+    - "anywhere"
+    - "work from anywhere"
+    - "location independent"
+    - "globally distributed"
+    - "remote - global"
+    - "remote global"
+    - "remote worldwide"
+  # Wider regions that usually include Pakistan → scored "yes"
+  region_terms:
+    - "apac"
+    - "asia"
+    - "asia pacific"
+    - "asia-pacific"
+    - "south asia"
+    - "southeast asia"
+    - "mena"
+    - "middle east"
+    - "emea"
+  # Regions that mean the role is closed to you → scored "no".
+  # NOTE: bare "us" is a substring match, so "Columbus, OH, US" matches too.
+  # That is intentional — it errs toward filtering out US-only roles.
+  excluded_regions:
+    - "united states"
+    - "usa"
+    - "us"
+    - "canada"
+    - "uk"
+    - "united kingdom"
+    - "europe"
+    - "eu"
+    - "germany"
+    - "france"
+    - "australia"
+    - "spain"
+    - "netherlands"
+  # Weaker positive signals — a match here alone scores "maybe", not "yes"
+  india_positive:
+    - "pakistan"
+    - "karachi"
+    - "lahore"
+    - "islamabad"
+    - "pkt"
+    - "pakistan standard time"
+    - "gulf"
+    - "dubai"
+    - "uae"
+    - "worldwide"
+    - "anywhere"
+    - "apac"
+  # Hard blockers — any match here scores "no" regardless of everything else
+  india_negative:
+    - "us only"
+    - "usa only"
+    - "us-only"
+    - "united states only"
+    - "must be located in the us"
+    - "must reside in the us"
+    - "us-based"
+    - "us based"
+    - "u.s. only"
+    - "u.s. based"
+    - "canada only"
+    - "uk only"
+    - "eu only"
+    - "europe only"
+    - "european union only"
+    - "uk-based"
+    - "eu-based"
+    - "must be authorized to work in the united states"
+    - "no visa sponsorship"
+    - "us citizen"
+    - "us work authorization"
+    - "est/cst/pst"
+    - "americas only"
+    - "americas timezone"
+    - "north america only"
+    - "na only"
+    - "latam only"
+    - "india only"
+    - "must be based in india"
+  # ⚠️ "pst" is deliberately NOT in this list. In job postings it means Pacific
+  # Standard Time, not Pakistan Standard Time — including it would mark
+  # US-Pacific-only roles as a good timezone match.
+  timezone_compatible:
+    - "pkt"
+    - "gmt"
+    - "utc"
+    - "cet"
+    - "eet"
+    - "ast"
+    - "gst"
+    - "flexible"
+    - "async"
+    - "asynchronous"
+    - "overlap"
+    - "any timezone"
+    - "all timezones"
+  timezone_incompatible:
+    - "pst only"
+    - "est only"
+    - "cst only"
+    - "mst only"
+    - "pacific time only"
+    - "eastern time only"
+    - "us timezone required"
+    - "us hours required"
+    - "core hours pst"
+    - "core hours est"
+
+outreach:
+  candidate_name: "[Your Name]"
+  # Optional per-profile override for the digest recipient. Left blank, the
+  # digest goes to the address in Settings -> Email delivery.
+  recipient_email: ""
+  candidate_core_tech: ["python", "fastapi"]
+  candidate_extra_tech: ["postgresql", "mysql", "docker", "microservices", "rabbitmq", "aws"]
+  linkedin_search_titles:
+    - { title: "Engineering Manager", label: "Eng Manager", category: "engineering" }
+    - { title: "Tech Lead", label: "Tech Lead", category: "engineering" }
+    - { title: "Head of Engineering", label: "Head of Eng", category: "engineering" }
+    - { title: "VP Engineering", label: "VP Eng", category: "executive" }
+    - { title: "CTO", label: "CTO", category: "executive" }
+    - { title: "CEO Founder", label: "CEO / Founder", category: "executive" }
+    - { title: "Technical Recruiter", label: "Tech Recruiter", category: "hr" }
+    - { title: "HR Manager", label: "HR Manager", category: "hr" }
+
+  # {stack} is substituted with the tech the job and you have in common.
+  bio_short: "6+ years building {stack} backends and shipping products end to end"
+  achievements:
+    - "[Your current role - company and what you own]"
+    - "[A system you built, with a number attached]"
+    - "[Scale, performance or business impact]"
+
+  dm_short_template: "{greeting}, I noticed {company} is hiring for {title}. I have {bio_short}. Would love to connect."
+  dm_long_template: |
+    {greeting},
+
+    Noticed {company} is hiring for {title}. The stack caught my eye — I've been shipping {stack} backends for 6 years.
+
+    {achievements}
+
+    Open to a 15-min chat to see if there's a fit?
+
+    Thanks,
+    {candidate_name}
+  email_digest_subject_role: "backend"
+  email_greeting: "Your Daily Job Digest"

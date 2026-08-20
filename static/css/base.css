@@ -1,0 +1,247 @@
+/* ── Reset, type and shell ─────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, p, figure, blockquote, dl, dd { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* Serif for anything that announces something. The pairing is the single
+   biggest reason this reads as a considered product rather than a dashboard. */
+.display, h1.display, .card-title, .pane-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: -0.014em;
+  line-height: var(--lh-tight);
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: var(--t-xl);
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-sm); }
+::selection { background: var(--accent-wash); color: var(--accent-ink); }
+
+* { scrollbar-width: thin; scrollbar-color: var(--rule-firm) transparent; }
+*::-webkit-scrollbar { width: 11px; height: 11px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--rule-firm);
+  border: 3.5px solid transparent;
+  background-clip: content-box;
+  border-radius: var(--r-pill);
+}
+
+/* Icons — sized by the box, coloured by the text around them. */
+.ico { width: 18px; height: 18px; flex: 0 0 auto; color: currentColor; }
+.ico-sm { width: 15px; height: 15px; }
+.ico-lg { width: 22px; height: 22px; }
+
+/* ── Shell ─────────────────────────────────────────────────── */
+
+.app { display: flex; min-height: 100vh; }
+
+.rail {
+  width: var(--rail);
+  flex: 0 0 var(--rail);
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 0 var(--s5);
+  height: var(--bar);
+  flex: 0 0 var(--bar);
+  border-bottom: 1px solid var(--rule);
+}
+.brand .mark { width: 22px; height: 22px; color: var(--accent); }
+.brand-name {
+  font-family: var(--serif);
+  font-size: var(--t-lg);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.nav { padding: var(--s4) var(--s3); display: flex; flex-direction: column; gap: 1px; flex: 1; overflow-y: auto; }
+
+.nav-group {
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+  padding: var(--s5) var(--s3) var(--s2);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 7px var(--s3);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-weight: 500;
+  position: relative;
+  transition: background var(--fast), color var(--fast);
+}
+.nav-item:hover { background: var(--surface-2); color: var(--ink); }
+.nav-item.active { color: var(--ink); font-weight: 600; }
+/* A rule in the margin rather than a filled pill — quieter, and it does not
+   turn the sidebar into a row of coloured blocks. */
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: -12px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 17px;
+  border-radius: 0 2px 2px 0;
+  background: var(--accent);
+}
+.nav-item.active .ico { color: var(--accent); }
+.nav-item .tally {
+  margin-left: auto;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail-foot { padding: var(--s3) var(--s4); border-top: 1px solid var(--rule); }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.bar {
+  height: var(--bar);
+  flex: 0 0 var(--bar);
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: saturate(1.6) blur(8px);
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding: 0 var(--s8);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.bar h1 { font-size: var(--t-lg); }
+.bar .where { color: var(--ink-3); font-size: var(--t-sm); }
+.bar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--s2); }
+
+.sheet { padding: var(--s8) var(--s8) var(--s16); max-width: 1180px; width: 100%; }
+.sheet.wide { max-width: 1440px; }
+.sheet > * + * { margin-top: var(--s6); }
+
+/* ── Rhythm helpers ────────────────────────────────────────── */
+
+.stack { display: flex; flex-direction: column; }
+.stack-2 > * + * { margin-top: var(--s2); }
+.stack-3 > * + * { margin-top: var(--s3); }
+.stack-4 > * + * { margin-top: var(--s4); }
+.stack-6 > * + * { margin-top: var(--s6); }
+
+.row { display: flex; align-items: center; gap: var(--s3); }
+.row-top { display: flex; align-items: flex-start; gap: var(--s3); }
+.split { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+.wrap { flex-wrap: wrap; }
+.push { margin-left: auto; }
+.grow { flex: 1; min-width: 0; }
+
+.cols { display: grid; gap: var(--s5); }
+.cols-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.cols-3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.cols-side { grid-template-columns: minmax(0, 1fr) 320px; }
+
+.quiet   { color: var(--ink-3); }
+.subdued { color: var(--ink-2); }
+.mono    { font-family: var(--mono); font-size: var(--t-sm); }
+.nums    { font-variant-numeric: tabular-nums; }
+.clip    { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hidden, [hidden] { display: none !important; }
+
+.eyebrow {
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.rule { height: 1px; background: var(--rule); border: 0; }
+
+@media (max-width: 1080px) { .cols-side { grid-template-columns: 1fr; } }
+
+@media (max-width: 900px) {
+  .app { flex-direction: column; }
+
+  /* The rail becomes a header strip: brand and status share the top row, the
+     nav scrolls beneath. Health and the theme control stay visible — hiding
+     the health indicator on a narrow screen would be the one place it matters
+     most, since there is less room for the banner. */
+  .rail {
+    width: 100%; flex: none; height: auto; position: static;
+    border-right: 0; border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "brand status" "nav nav";
+  }
+  .brand { grid-area: brand; border-bottom: 0; }
+  .rail-foot {
+    grid-area: status;
+    display: flex; align-items: center;
+    border-top: 0;
+    padding: 0 var(--s4);
+  }
+  .rail-foot .split { gap: var(--s3); }
+
+  .nav {
+    grid-area: nav;
+    flex-direction: row; overflow-x: auto;
+    padding: 0 var(--s3) var(--s2); gap: var(--s1);
+    border-top: 1px solid var(--rule);
+  }
+  .nav-group { display: none; }
+  .nav-item { white-space: nowrap; padding-top: var(--s3); }
+  .nav-item.active::before {
+    left: var(--s3); right: var(--s3); top: auto; bottom: 0;
+    width: auto; height: 2px; transform: none; border-radius: 2px 2px 0 0;
+  }
+  .nav-item .tally { display: none; }
+
+  .bar { padding: 0 var(--s4); }
+  .bar .where { display: none; }
+  .sheet { padding: var(--s5) var(--s4) var(--s12); }
+}
+
+@media (max-width: 560px) {
+  .bar { gap: var(--s2); }
+  .bar-actions .btn span { display: none; }     /* icon-only actions when tight */
+  .filters .field { flex: 1 1 100%; }
+}
