@@ -195,16 +195,26 @@ def app(page, server):
         return page.request.post(server + "/api" + path, data=data).json()
 
     def wait_for_run(timeout=60):
-        """Block until no run is active, then return the most recent one."""
+        """Block until a run has both started and finished, then return it.
+
+        `clean_state` empties the runs table before every test, so between
+        starting a run and its row appearing there is a window with no active
+        run and no history. Treating that as "finished" returned None and the
+        caller crashed on None["status"] — rare on a fast machine, common on a
+        slow one. An empty table means not started yet, so keep waiting.
+        """
         if os.environ.get("CI"):
             timeout *= 2
         deadline = time.time() + timeout
+        d: dict = {}
         while time.time() < deadline:
             d = get("/runs?limit=1")
-            if not d["active"]:
-                return d["runs"][0] if d["runs"] else None
+            if not d["active"] and d["runs"]:
+                return d["runs"][0]
             time.sleep(0.3)
-        raise AssertionError("Run did not finish within the timeout")
+        raise AssertionError(
+            f"No run started and finished within {timeout}s "
+            f"(active={d.get('active')}, history={len(d.get('runs', []))})")
 
     page.goto_app = goto
     page.api_get = get
