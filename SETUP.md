@@ -91,20 +91,27 @@ that mailbox.
 
 Work through this in the browser:
 
-1. **Companies → Add curated list** — loads a set of companies whose job boards
+1. **Settings → Where you can work** — ⚠️ **do not skip this either.** Signal
+   ships knowing nothing about where you are, deliberately: guessing wrong would
+   mark roles you cannot take as open to you. Fill in your country and cities
+   under "Your country and cities", and put anything that rules a role out for
+   you — "us only" if you are not in the US, and so on — under the first field.
+   Until you do, only postings that say "worldwide" or "anywhere" count as open.
+
+2. **Companies → Add curated list** — loads a set of companies whose job boards
    can be read directly, at no cost to your search allowance.
 
-2. **Companies → Find job boards** — ⚠️ **do not skip this.** Companies arrive
+3. **Companies → Find job boards** — ⚠️ **do not skip this.** Companies arrive
    paused because Signal does not yet know where they publish jobs. This checks
    each one for a Greenhouse, Lever or Ashby board and switches on the ones that
    have a readable board. Without it the company side collects nothing at all.
 
-3. **Today → Find roles** — watch it run. You can navigate away or close the tab;
+4. **Today → Find roles** — watch it run. You can navigate away or close the tab;
    the run continues on the server and any page picks it back up.
 
-4. **Intros → Write intros**, then **Preview digest**, then **Send digest**.
+5. **Intros → Write intros**, then **Preview digest**, then **Send digest**.
 
-5. **Settings → Your pitch** — the one thing only you can write. A one-line bio
+6. **Settings → Your pitch** — the one thing only you can write. A one-line bio
    and two or three achievements, with numbers in them. Everything else has a
    sensible default.
 

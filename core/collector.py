@@ -43,7 +43,7 @@ def _build_job_board_sources() -> list:
         queries = [
             {
                 "query": q["query"],
-                "country": q.get("country", "IN"),
+                "country": q.get("country") or settings.get("search_country"),
                 "date_posted": q.get("date_posted", "3days"),
                 **({"remote_jobs_only": "true"} if q.get("remote_jobs_only") else {}),
             }
@@ -97,7 +97,7 @@ def _score_and_store(jobs: list[Job], stats: dict, profile: dict = None):
 
         job.relevance_score = result["score"]
         job.experience_level = result["experience_level"]
-        job.india_friendly = result["india_friendly"]
+        job.location_fit = result["location_fit"]
         job.location_note = result["location_note"]
 
         existing_tech = {t.strip() for t in job.tech_stack.split(",") if t.strip()}

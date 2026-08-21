@@ -143,15 +143,49 @@ claim had missed — the fix required pinning `starlette` explicitly, because
 FastAPI only requires `>=0.46` and pip leaves a vulnerable transitive version in
 place on upgrade.
 
+## 9 — Dropping the country assumption
+
+The tool had been built for one person in one place, then adapted for another,
+and it showed. India was not a setting, it was an assumption baked into four
+separate layers: a curated company list that was two-thirds Indian employers, a
+scorer that fell back to Indian cities as "home" and treated the US, UK and
+Europe as closed, profile keys literally called `india_positive` and
+`india_negative`, and a `india_friendly` column carrying the verdict.
+
+The goal became: anyone, anywhere, configures their own country.
+
+The company list lost its 98 Indian-HQ entries and the "India engineering
+centre" framing on 58 multinationals, leaving employers that are relevant
+regardless of where you are. Seeded companies no longer claim `yes` for
+location; that is a judgement only a configured profile can make.
+
+The scorer's fallbacks are now **empty** rather than Indian. That is the part
+worth understanding: the obvious fix is to swap one country for another, or to
+keep a list "so it works out of the box". Both are wrong. A wrong home country
+marks roles you cannot take as open to you, which costs real effort, so
+unconfigured the scorer only recognises genuinely worldwide postings and calls
+everything else `maybe`.
+
+`india_friendly` finally became `location_fit`, reversing the decision recorded
+below. What made it worth doing was not tidiness — it was that the name had gone
+from untidy to misleading. `init_db()` renames the column in place, idempotently,
+so existing databases keep their scores.
+
+The default timezone moved from `Asia/Karachi` to `UTC`, the timezone picker
+grew from 11 zones to cover every region, and the search country became a
+setting instead of a hardcoded `"IN"` in eight places.
+
 ---
 
 ## Discarded ideas
 
 - **React/Vite frontend.** A build step would break "one command starts
   everything."
-- **Renaming `india_friendly`.** The internal name is wrong but changing it needs
-  a schema migration and touches every endpoint for no functional gain. The UI
-  says "open to you"; only the storage keeps the old name.
+- **Renaming `india_friendly`.** Skipped at the time: the internal name was
+  wrong, but changing it needed a schema migration and touched every endpoint
+  for no functional gain. **Later reversed** — see section 9, where the tool
+  stopped assuming a country and the name became actively misleading rather
+  than merely untidy.
 - **Auto-start on Windows login.** Offered, not chosen.
 - **A vault for secrets.** Rejected as dishonest framing — a passphrase on every
   start is wrong for a tool that must run unattended at 9am, so the threat model

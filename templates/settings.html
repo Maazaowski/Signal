@@ -94,7 +94,7 @@
       <div class="panel"><div class="panel-bd stack-6">
         <div class="field"><label>1 &middot; Rules the role out entirely</label>
           <span class="note">Beats every positive signal. Phrases like "US only" belong here.</span>
-          <div class="chips" data-path="location.india_negative"></div></div>
+          <div class="chips" data-path="location.blocking_terms"></div></div>
         <div class="field"><label>2 &middot; Your country and cities</label>
           <span class="note">A match scores the role <strong>Open to you</strong>.</span>
           <div class="chips" data-path="location.home_terms"></div></div>
@@ -109,7 +109,7 @@
           <div class="chips" data-path="location.excluded_regions"></div></div>
         <div class="field"><label>Weaker hints</label>
           <span class="note">A match here alone scores only <strong>Possibly</strong>.</span>
-          <div class="chips" data-path="location.india_positive"></div></div>
+          <div class="chips" data-path="location.weak_positives"></div></div>
         <div class="cols cols-2">
           <div class="field"><label>Timezones that work</label>
             <div class="chips" data-path="location.timezone_compatible"></div></div>
@@ -167,11 +167,9 @@
         <div class="panel-ft" style="flex-wrap:wrap;gap:var(--s2)">
           <input class="in" id="q-new" placeholder="senior python engineer" style="flex:1 1 220px">
           <select class="in" id="q-country" style="width:auto">
-            <option value="PK">Pakistan</option><option value="AE">UAE</option>
-            <option value="SA">Saudi Arabia</option><option value="US">United States</option>
-            <option value="GB">United Kingdom</option><option value="CA">Canada</option>
-            <option value="DE">Germany</option><option value="SG">Singapore</option>
-            <option value="IN">India</option>
+            {% for code, name in countries %}
+            <option value="{{ code }}"{% if code == default_country %} selected{% endif %}>{{ name }}</option>
+            {% endfor %}
           </select>
           <select class="in" id="q-when" style="width:auto">
             <option value="today">Today</option><option value="3days">3 days</option>

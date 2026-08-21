@@ -12,8 +12,8 @@ async function loadLede() {
       api('/stats'), api('/outreach/stats'), api('/companies/stats'),
     ]);
 
-    const open = (stats.by_india || {}).yes || 0;
-    const maybe = (stats.by_india || {}).maybe || 0;
+    const open = (stats.by_location_fit || {}).yes || 0;
+    const maybe = (stats.by_location_fit || {}).maybe || 0;
     const ready = (intros.by_status || {}).pending || 0;
     const total = stats.total || 0;
 
@@ -52,7 +52,7 @@ async function loadLede() {
 async function loadShortlist() {
   setHtml('#shortlist', ghostEntries(4));
   try {
-    const d = await api('/jobs?min_score=45&india_friendly=maybe&limit=6');
+    const d = await api('/jobs?min_score=45&location_fit=maybe&limit=6');
     if (!d.jobs.length) {
       setHtml('#shortlist', blank({
         glyph: 'roles',
@@ -76,7 +76,7 @@ async function loadShortlist() {
             ${j.salary ? `<span class="sep">·</span><span>${text(j.salary)}</span>` : ''}
           </div>
         </div>
-        <div class="entry-aside">${fitTag(j.india_friendly, j.location_note)}</div>
+        <div class="entry-aside">${fitTag(j.location_fit, j.location_note)}</div>
       </div>`).join(''));
     $$('#shortlist [data-role]').forEach(el =>
       el.onclick = () => location.href = `/roles?role=${encodeURIComponent(el.dataset.role)}`);

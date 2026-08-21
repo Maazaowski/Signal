@@ -235,8 +235,9 @@ function runTag(status) {
   return `<span class="${s.cls}">${pip}${text(s.label)}</span>`;
 }
 
-// "Open to you" reads as a fact about the role. "India friendly" was both wrong
-// for this user and jargon; "Location fit" was engineer-speak.
+// "Open to you" reads as a fact about the role, and stays true whatever country
+// the user configured. "Location fit" is the internal name; it is engineer-speak
+// and does not belong on screen.
 const FIT = {
   yes:     { label: 'Open to you', cls: 'tag tag-good' },
   maybe:   { label: 'Possibly',    cls: 'tag tag-caution' },

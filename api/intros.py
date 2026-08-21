@@ -71,12 +71,12 @@ async def api_outreach_refresh(limit: int = Query(15, ge=1, le=50),
 async def api_generate_outreach(
     min_score: int = Query(40, ge=0, le=100),
     limit: int = Query(15, ge=1, le=50),
-    india_friendly: str | None = "maybe",
+    location_fit: str | None = "maybe",
 ):
     """For top N high-scoring jobs without existing outreach,
     build LinkedIn search URLs + generate DMs. No API credits used."""
     generated = generate_outreach_for_top_jobs(
-        limit=limit, min_score=min_score, india_friendly=india_friendly,
+        limit=limit, min_score=min_score, location_fit=location_fit,
     )
     if generated == 0:
         return {"generated": 0, "message": "No new jobs eligible for outreach"}

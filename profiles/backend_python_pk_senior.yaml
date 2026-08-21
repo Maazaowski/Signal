@@ -170,7 +170,7 @@ location:
     - "spain"
     - "netherlands"
   # Weaker positive signals — a match here alone scores "maybe", not "yes"
-  india_positive:
+  weak_positives:
     - "pakistan"
     - "karachi"
     - "lahore"
@@ -184,7 +184,7 @@ location:
     - "anywhere"
     - "apac"
   # Hard blockers — any match here scores "no" regardless of everything else
-  india_negative:
+  blocking_terms:
     - "us only"
     - "usa only"
     - "us-only"

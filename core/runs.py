@@ -102,7 +102,7 @@ def _load_default_handlers() -> None:
             generate_outreach_for_top_jobs,
             limit=kw.get("limit", 15),
             min_score=kw.get("min_score", 40),
-            india_friendly=kw.get("india_friendly", "maybe"),
+            location_fit=kw.get("location_fit", "maybe"),
         )
         return {"generated": n}
 

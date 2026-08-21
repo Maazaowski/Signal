@@ -99,62 +99,56 @@ scoring:
     - "hydration"
 
 location:
-  india_positive:
-    - "india"
-    - "asia"
+  # Signal does not assume where you live. Set these under
+  # Settings -> Where you can work, or edit them here before importing.
+  #
+  # Order matters, and each rule exists because of a real false positive:
+  #   1. blocking_terms rule a role out outright
+  #   2. home_terms mean it is open to you
+  #   3. a concrete foreign city in the location field means it is not
+  #   4. global_terms mean genuinely worldwide
+  #   5. region_terms are wider regions that include you
+
+  # Phrases that rule a role out FOR YOU. Country restrictions belong here only
+  # if they exclude you: "us only" is a blocker if you are not in the US, and
+  # not one if you are. Left empty on purpose - it depends entirely on you.
+  blocking_terms: []
+
+  # Your country and the cities you can work in, e.g. "portugal", "lisbon".
+  home_terms: []
+
+  # Softer hints, checked after the rules above.
+  weak_positives: []
+
+  # Country-independent: these mean open to anyone, anywhere. Note that bare
+  # "global" and "fully remote" are deliberately absent - both appear in
+  # ordinary marketing copy and produced false positives.
+  global_terms:
     - "worldwide"
-    - "global"
     - "anywhere"
-    - "apac"
-    - "asia pacific"
-    - "asia-pacific"
+    - "work from anywhere"
+    - "location independent"
+    - "globally distributed"
     - "remote - global"
     - "remote global"
-    - "globally distributed"
-    - "work from anywhere"
-    - "mumbai"
-    - "bangalore"
-    - "bengaluru"
-    - "hyderabad"
-    - "pune"
-    - "delhi"
-    - "chennai"
-    - "kolkata"
-    - "noida"
-    - "gurgaon"
-    - "gurugram"
-    - "remote - india"
-    - "ist"
-  india_negative:
-    - "us only"
-    - "usa only"
-    - "us-only"
-    - "united states only"
-    - "us-based"
-    - "canada only"
-    - "uk only"
-    - "eu only"
-    - "europe only"
-    - "no visa sponsorship"
-    - "us citizen"
-    - "americas only"
-    - "north america only"
+
+  # Wider regions that include you, e.g. "apac", "emea", "latam".
+  region_terms: []
+
+  # Regions that mean the role is not for you.
+  excluded_regions: []
+
+  # Timezone wording that works regardless of where you are.
   timezone_compatible:
-    - "ist"
-    - "gmt"
-    - "utc"
-    - "cet"
     - "flexible"
     - "async"
     - "asynchronous"
     - "overlap"
     - "any timezone"
-  timezone_incompatible:
-    - "pst only"
-    - "est only"
-    - "cst only"
-    - "us timezone required"
-    - "us hours required"
+    - "all timezones"
+
+  # Timezone demands that rule you out. Add the ones that do, e.g. "pst only".
+  timezone_incompatible: []
 
 outreach:
   candidate_name: "[Your Name]"

@@ -52,14 +52,16 @@ def estimate_experience_level(text: str) -> str:
     return "mid"
 
 
-# Fallback term lists. Used only when a profile leaves the matching
-# `location` key empty, so the presets that shipped with this repo
-# (backend_python / frontend_react / fresher_any) score exactly as before.
-_DEFAULT_HOME_TERMS = [
-    "india", "bangalore", "bengaluru", "mumbai", "hyderabad",
-    "pune", "delhi", "chennai", "kolkata", "noida", "gurgaon",
-    "gurugram", "remote - india",
-]
+# Fallback term lists, used only where a profile leaves the matching `location`
+# key empty.
+#
+# There is deliberately no default home country. Signal does not know where its
+# user lives until they say so in Settings -> Where you can work, and guessing
+# is worse than not guessing: a wrong home country marks roles you cannot take
+# as open to you, which is the one error that wastes real effort. Unconfigured,
+# only genuinely worldwide postings score as open and everything tied to a
+# place scores "maybe".
+_DEFAULT_HOME_TERMS: list[str] = []
 # NOTE: bare "global" is deliberately absent - "global leader", "global team"
 # etc. appear in ordinary company boilerplate and produced false positives.
 _DEFAULT_GLOBAL_TERMS = [
@@ -72,23 +74,22 @@ _REMOTE_TOKENS = [
     "hybrid", "wfh", "work from home",
 ]
 
-_DEFAULT_REGION_TERMS = ["apac", "asia", "asia pacific", "asia-pacific"]
-_DEFAULT_EXCLUDED_REGIONS = [
-    "united states", "usa", "us", "canada", "uk",
-    "united kingdom", "europe", "eu", "germany",
-    "france", "australia", "spain", "netherlands",
-]
+# Both empty for the same reason as _DEFAULT_HOME_TERMS: a region only includes
+# you, or excludes you, relative to where you are. The previous defaults listed
+# APAC as yours and the US, UK and Europe as closed to you, which is wrong for
+# most of the planet. Set these per profile.
+_DEFAULT_REGION_TERMS: list[str] = []
+_DEFAULT_EXCLUDED_REGIONS: list[str] = []
 
 
-def check_india_friendly(location: str, description: str,
+def check_location_fit(location: str, description: str,
                          profile: dict = None) -> dict:
     """Decide whether a job is open to the candidate's location.
 
-    The name (and the `india_friendly` key it returns) is kept because it maps
-    onto a DB column, several API query params and JS state of the same name.
-    What it actually computes is *location fit*, and every term it matches on
-    now comes from the active profile's `location` section, so the same code
-    serves a Pakistan profile, an India profile, or anything else.
+    Every term it matches on comes from the active profile's `location`
+    section, so the same code serves any country. Nothing here assumes where
+    the user lives — an unconfigured profile falls back to worldwide-remote
+    only rather than to a country.
 
     Returns:
         result: 'yes' | 'no' | 'maybe'
@@ -96,8 +97,13 @@ def check_india_friendly(location: str, description: str,
     """
     profile = profile or get_active_profile()
     loc_cfg = profile["location"]
-    pos_terms = loc_cfg.get("india_positive") or []
-    neg_terms = loc_cfg.get("india_negative") or []
+    # `blocking_terms`/`weak_positives` were `india_negative`/`india_positive`.
+    # The old names are still read so a profile exported before the rename
+    # keeps working.
+    pos_terms = (loc_cfg.get("weak_positives")
+                 or loc_cfg.get("india_positive") or [])
+    neg_terms = (loc_cfg.get("blocking_terms")
+                 or loc_cfg.get("india_negative") or [])
     tz_good_list = loc_cfg.get("timezone_compatible") or []
     tz_bad_list = loc_cfg.get("timezone_incompatible") or []
     home_terms = loc_cfg.get("home_terms") or _DEFAULT_HOME_TERMS
@@ -180,9 +186,14 @@ def check_india_friendly(location: str, description: str,
         }
 
     if "remote" in loc_lower and not any(r in loc_lower for r in excluded_regions):
+        # Deliberately vague, because at this point it genuinely is: the role is
+        # remote and nothing configured has ruled it in or out. Claiming "no
+        # region specified" was wrong once the excluded-region list stopped
+        # defaulting to a set of countries — "Remote (US only)" reaches here on
+        # an unconfigured profile, and a region plainly is specified.
         return {
             "result": "maybe",
-            "note": "Remote - no region specified, may be open to you",
+            "note": "Remote - check the posting for location limits",
         }
 
     return {
@@ -269,7 +280,7 @@ def score_job(title: str, description: str, location: str = "",
         reasons.append(f"Signals: {', '.join(signal_matches[:5])}")
 
     # Location fit
-    india_check = check_india_friendly(location, description, profile=profile)
+    fit_check = check_location_fit(location, description, profile=profile)
 
     score = max(0, min(100, score))
 
@@ -279,6 +290,6 @@ def score_job(title: str, description: str, location: str = "",
         "experience_level": exp_level,
         "reasons": reasons,
         "red_flags": red_flags,
-        "india_friendly": india_check["result"],
-        "location_note": india_check["note"],
+        "location_fit": fit_check["result"],
+        "location_note": fit_check["note"],
     }

@@ -138,10 +138,11 @@ Everything after that happens in the browser:
 |---|---|
 | **1. Settings → Integrations** | Add a JSearch API key. Optional — the free boards work without one. Use **Test key** before saving. |
 | **2. Settings → Email** | Add a Gmail address and app password. **Send test email** verifies it now rather than at 9am. |
-| **3. Settings → Your pitch** | Your name, a one-line bio, three achievements. This is what the intros are built from. |
-| **4. Companies → Add curated list** | Loads ~210 employers. |
-| **5. Companies → Find job boards** | Works out which of them publish through Greenhouse, Lever or Ashby. **Do this** — without it the crawler has nothing to visit. |
-| **6. Today → Find roles** | First collection. Watch it run; close the tab if you like, it keeps going. |
+| **3. Settings → Where you can work** | Your country and cities, and any restriction that rules a role out for you. **Do this** — Signal assumes no country, so until you set it only genuinely worldwide postings count as open to you. |
+| **4. Settings → Your pitch** | Your name, a one-line bio, three achievements. This is what the intros are built from. |
+| **5. Companies → Add curated list** | Loads ~108 employers that hire across regions. |
+| **6. Companies → Find job boards** | Works out which of them publish through Greenhouse, Lever or Ashby. **Do this** — without it the crawler has nothing to visit. |
+| **7. Today → Find roles** | First collection. Watch it run; close the tab if you like, it keeps going. |
 
 > [!TIP]
 > Full walkthrough, including how to get each credential, is in **[SETUP.md](SETUP.md)**.

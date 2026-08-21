@@ -39,7 +39,14 @@ async def page_activity(request: Request):
 
 @router.get("/settings", response_class=HTMLResponse)
 async def page_settings(request: Request):
-    return templates.TemplateResponse(request, "settings.html", page_context(request, "settings"))
+    from core import settings_store as settings
+    # The saved-search country dropdown renders from the settings store's list
+    # so there is one country list, not one here and one in the template.
+    return templates.TemplateResponse(
+        request, "settings.html",
+        page_context(request, "settings",
+                     countries=[(c, settings.COUNTRY_NAMES[c]) for c in settings.COUNTRIES],
+                     default_country=settings.get("search_country")))
 
 
 # Older paths, kept working so bookmarks and the docs do not rot.

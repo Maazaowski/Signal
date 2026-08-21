@@ -12,7 +12,7 @@ SCOPES = [
 
 # Column headers that go into the sheet
 HEADERS = [
-    "Title", "Company", "Location", "India Friendly", "Location Note",
+    "Title", "Company", "Location", "Open To You", "Location Note",
     "Relevance Score", "Tech Stack", "Experience Level", "Salary",
     "Job URL", "Source", "Posted Date", "Status", "Company Domain",
 ]
@@ -28,7 +28,7 @@ def _job_to_row(job: dict) -> list:
         job.get("title", ""),
         job.get("company", ""),
         job.get("location", ""),
-        job.get("india_friendly", "unknown"),
+        job.get("location_fit", "unknown"),
         job.get("location_note", ""),
         job.get("relevance_score", 0),
         job.get("tech_stack", ""),
@@ -47,7 +47,7 @@ def export_to_sheet(
     spreadsheet_id: str,
     sheet_name: str = "Jobs",
     min_score: int = 0,
-    india_friendly: str = None,
+    location_fit: str = None,
     source: str = None,
     search: str = None,
     tech: str = None,
@@ -61,7 +61,7 @@ def export_to_sheet(
         spreadsheet_id: the Google Sheet ID (from the URL)
         sheet_name: worksheet tab name
         min_score: minimum relevance score
-        india_friendly: 'yes', 'maybe', 'no', or None
+        location_fit: 'yes', 'maybe', 'no', or None
         source: filter by source
         search: search query
         tech: tech filter
@@ -82,7 +82,7 @@ def export_to_sheet(
     # Fetch jobs from DB with filters
     jobs = get_jobs(
         min_score=min_score,
-        india_friendly=india_friendly,
+        location_fit=location_fit,
         source=source,
         search=search,
         tech=tech,

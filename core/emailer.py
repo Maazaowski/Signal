@@ -46,7 +46,7 @@ def _render_card(i: int, item: dict) -> str:
     posted = _format_date(item.get("posted_date", ""))
     tech = _escape((item.get("tech_stack") or "")[:100])
     score = item.get("relevance_score", 0)
-    india = item.get("india_friendly", "unknown")
+    fit = item.get("location_fit", "unknown")
 
     job_url = item.get("job_url") or ""
     # Feed-supplied URL landing in an href: enforce scheme, then escape like
@@ -63,7 +63,7 @@ def _render_card(i: int, item: dict) -> str:
     if not searches:
         searches = [{"label": "Search", "url": item.get("contact_linkedin", "#")}]
 
-    india_color = {"yes": "#00b894", "maybe": "#fdcb6e", "no": "#e17055"}.get(india, "#8b8fa3")
+    fit_color = {"yes": "#00b894", "maybe": "#fdcb6e", "no": "#e17055"}.get(fit, "#8b8fa3")
 
     # Group searches by category for nicer layout
     colors = {"engineering": "#0a66c2", "executive": "#6c5ce7", "hr": "#00b894"}
@@ -97,7 +97,7 @@ def _render_card(i: int, item: dict) -> str:
                 <td style="font-size:11px;color:#6b7280;letter-spacing:0.5px;text-transform:uppercase;">#{i}</td>
                 <td align="right">
                     <span style="background:#6c5ce7;color:white;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;">Score {score}</span>
-                    <span style="background:{india_color}22;color:{india_color};border:1px solid {india_color};padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-left:4px;">{_escape(india).upper()}</span>
+                    <span style="background:{fit_color}22;color:{fit_color};border:1px solid {fit_color};padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-left:4px;">{_escape(fit).upper()}</span>
                 </td>
             </tr></table>
             <div style="font-size:18px;font-weight:700;color:#111827;margin-top:8px;">{title}</div>
@@ -277,7 +277,7 @@ def send_daily_digest(limit: int = None, dry_run: bool = False) -> dict:
 
 
 def generate_outreach_for_top_jobs(limit: int = 15, min_score: int = 40,
-                                   india_friendly: str = "maybe",
+                                   location_fit: str = "maybe",
                                    seen_after: str | None = None) -> int:
     """Create outreach items for the highest-scoring jobs that don't have one yet.
     If `seen_after` is given, only jobs refreshed at/after that timestamp qualify —
@@ -298,7 +298,7 @@ def generate_outreach_for_top_jobs(limit: int = 15, min_score: int = 40,
     profile = get_active_profile()
     profile_id = profile.get("_id")
 
-    top_jobs = get_jobs(min_score=min_score, india_friendly=india_friendly,
+    top_jobs = get_jobs(min_score=min_score, location_fit=location_fit,
                          seen_after=seen_after, limit=limit * 5)
     candidates = [j for j in top_jobs if not outreach_exists_for_job(j["id"])][:limit]
 

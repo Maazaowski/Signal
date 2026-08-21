@@ -26,7 +26,7 @@ async def api_get_jobs(
     search: str | None = None,
     location: str | None = None,
     tech: str | None = None,
-    india_friendly: str | None = None,
+    location_fit: str | None = None,
     company_domain: str | None = None,
     limit: int = Query(50, ge=1, le=500),
     offset: int = Query(0, ge=0),
@@ -34,7 +34,7 @@ async def api_get_jobs(
     jobs = get_jobs(
         source=source, status=status, min_score=min_score,
         search=search, location=location, tech=tech,
-        india_friendly=india_friendly, company_domain=company_domain,
+        location_fit=location_fit, company_domain=company_domain,
         limit=limit, offset=offset,
     )
     return {"jobs": jobs, "count": len(jobs)}

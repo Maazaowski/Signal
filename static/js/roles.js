@@ -12,7 +12,7 @@ function params() {
   const state = $('#f-state').value;
   const src = $('#f-src').value;
   if (q) p.set('search', q);
-  if (open) p.set('india_friendly', open);
+  if (open) p.set('location_fit', open);
   if (min && min !== '0') p.set('min_score', min);
   if (state) p.set('status', state);
   if (src) p.set('source', src);
@@ -60,7 +60,7 @@ async function load() {
             ${j.mark_for_email ? `<span class="sep">·</span><span>in digest</span>` : ''}
           </div>
         </div>
-        <div class="entry-aside">${fitTag(j.india_friendly, j.location_note)}</div>
+        <div class="entry-aside">${fitTag(j.location_fit, j.location_note)}</div>
       </div>`).join(''));
 
     $$('#roles [data-role]').forEach(el => el.onclick = () => openRole(el.dataset.role));
@@ -118,7 +118,7 @@ async function openRole(id) {
 
     setHtml('#rp-body', `
       <div class="row wrap" style="margin-bottom:var(--s5)">
-        ${fitTag(j.india_friendly, j.location_note)}
+        ${fitTag(j.location_fit, j.location_note)}
         <span class="tag">${text(j.source)}</span>
         <span class="tag">${text(j.experience_level || 'level unclear')}</span>
         ${j.salary ? `<span class="tag tag-good">${text(j.salary)}</span>` : ''}

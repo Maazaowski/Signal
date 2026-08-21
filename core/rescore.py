@@ -52,10 +52,10 @@ def rescore_all_jobs(delete_below_min: bool = False) -> dict:
                 existing_tech.update(result["tech_stack"])
                 conn.execute(
                     "UPDATE jobs SET relevance_score = ?, experience_level = ?, "
-                    "india_friendly = ?, location_note = ?, tech_stack = ?, "
+                    "location_fit = ?, location_note = ?, tech_stack = ?, "
                     "scored_profile_id = ? WHERE id = ?",
                     (result["score"], result["experience_level"],
-                     result["india_friendly"], result["location_note"],
+                     result["location_fit"], result["location_note"],
                      ", ".join(sorted(existing_tech)), profile_id, r["id"]),
                 )
                 updated += 1

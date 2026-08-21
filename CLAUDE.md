@@ -86,22 +86,32 @@ These are the traps. Each one shipped broken and was found the hard way.
 
 ## Scoring — the subtle parts
 
-`core/scorer.py::check_india_friendly` decides whether a role is open to the
-user. The name is historical: it returns `india_friendly` because that maps onto
-a database column, API params and JS state. **It means "location fit."** Renaming
-it cascades everywhere for no functional gain.
+`core/scorer.py::check_location_fit` decides whether a role is open to the user.
+It stores into `jobs.location_fit`; the UI calls it **"open to you"**.
+
+**Nothing here knows a country.** Every term comes from the active profile's
+`location` section, set in Settings → Where you can work. The fallbacks in
+`scorer.py` for home terms, regions and excluded regions are all deliberately
+**empty**: unconfigured, only genuinely worldwide postings score `yes` and
+everything tied to a place scores `maybe`. Do not put a country in them. A wrong
+home country marks roles the user cannot take as open, which is the one error
+that wastes real effort.
 
 Order matters, and each rule exists because of a real false positive:
 
-1. Hard blockers (`"us only"`) win over everything.
-2. Home terms (`karachi`, `pakistan`) → **yes**.
+1. Hard blockers (`blocking_terms`, e.g. `"us only"`) win over everything.
+2. Home terms → **yes**.
 3. **A concrete foreign city in the *location field* → no**, before any
    description check. Without this, "we are a global company" boilerplate in a
    London-only posting scored it as open.
 4. Global terms → yes. **`"global"` and `"fully remote"` are deliberately absent** —
    both appear in ordinary marketing copy.
-5. Region terms (`apac`, `mena`) → yes.
+5. Region terms → yes.
 6. A bare city with no remote wording is onsite → no.
+
+Whether a country restriction is a *blocker* depends on where the user is:
+`"us only"` rules the role out for most people and rules it in for someone in
+Texas. That is why `blocking_terms` ships empty in the generic presets.
 
 **`"pst"` must never be a compatible timezone.** In job posts it means Pacific
 Standard Time, not Pakistan Standard Time.
@@ -167,8 +177,9 @@ Considered and deliberately skipped, with reasons:
 
 - **SSRF validation on `careers_url`** and the path-traversal guard in preset
   import. Both are self-attacks on a localhost single-user tool.
-- **Renaming `india_friendly`.** Cosmetic; needs a schema migration and touches
-  every endpoint.
+- **Re-adding a default home country.** The scorer's location fallbacks are
+  empty on purpose. Filling them in "so it works out of the box" reintroduces
+  exactly the coupling that made this a one-country tool.
 - **Auth.** Out of scope for a tool bound to loopback; if it is ever exposed,
   that decision changes and auth becomes mandatory, not optional. A public
   *repository* is not a public *deployment* — `127.0.0.1` still holds.

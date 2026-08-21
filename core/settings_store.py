@@ -62,10 +62,41 @@ def _s(**kw) -> Setting:
 # Common IANA zones, offered as a picker rather than a free-text field so a typo
 # cannot silently stop the scheduler.
 TIMEZONES = [
-    "Asia/Karachi", "Asia/Kolkata", "Asia/Dubai", "Asia/Riyadh", "Asia/Singapore",
-    "Europe/London", "Europe/Berlin", "America/New_York", "America/Los_Angeles",
-    "Australia/Sydney", "UTC",
+    "UTC",
+    "Africa/Cairo", "Africa/Johannesburg", "Africa/Lagos", "Africa/Nairobi",
+    "America/Argentina/Buenos_Aires", "America/Bogota", "America/Chicago",
+    "America/Denver", "America/Los_Angeles", "America/Mexico_City",
+    "America/New_York", "America/Sao_Paulo", "America/Toronto",
+    "Asia/Dhaka", "Asia/Dubai", "Asia/Hong_Kong", "Asia/Jakarta",
+    "Asia/Karachi", "Asia/Kolkata", "Asia/Manila", "Asia/Riyadh",
+    "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Tokyo",
+    "Australia/Melbourne", "Australia/Sydney",
+    "Europe/Amsterdam", "Europe/Berlin", "Europe/Dublin", "Europe/Istanbul",
+    "Europe/Lisbon", "Europe/London", "Europe/Madrid", "Europe/Paris",
+    "Europe/Warsaw", "Pacific/Auckland",
 ]
+
+# ISO 3166-1 alpha-2, which is what JSearch expects. Offered as a picker so a
+# typo cannot silently return nothing. Alphabetical by name; the Settings page
+# renders its saved-search dropdown from this same map, so there is one list.
+COUNTRY_NAMES: dict[str, str] = {
+    "AR": "Argentina", "AU": "Australia", "AT": "Austria", "BD": "Bangladesh",
+    "BE": "Belgium", "BR": "Brazil", "CA": "Canada", "CL": "Chile",
+    "CN": "China", "CO": "Colombia", "CZ": "Czechia", "DK": "Denmark",
+    "EG": "Egypt", "FI": "Finland", "FR": "France", "DE": "Germany",
+    "GR": "Greece", "HK": "Hong Kong", "HU": "Hungary", "IN": "India",
+    "ID": "Indonesia", "IE": "Ireland", "IL": "Israel", "IT": "Italy",
+    "JP": "Japan", "KE": "Kenya", "MY": "Malaysia", "MX": "Mexico",
+    "MA": "Morocco", "NL": "Netherlands", "NZ": "New Zealand",
+    "NG": "Nigeria", "NO": "Norway", "PK": "Pakistan", "PE": "Peru",
+    "PH": "Philippines", "PL": "Poland", "PT": "Portugal", "RO": "Romania",
+    "SA": "Saudi Arabia", "SG": "Singapore", "ZA": "South Africa",
+    "KR": "South Korea", "ES": "Spain", "SE": "Sweden", "CH": "Switzerland",
+    "TW": "Taiwan", "TH": "Thailand", "TR": "Turkey", "UA": "Ukraine",
+    "AE": "United Arab Emirates", "GB": "United Kingdom",
+    "US": "United States", "VN": "Vietnam",
+}
+COUNTRIES = sorted(COUNTRY_NAMES, key=lambda c: COUNTRY_NAMES[c])
 
 SCHEMA: dict[str, Setting] = {s.key: s for s in [
     # ── Brand ────────────────────────────────────────────────
@@ -78,7 +109,7 @@ SCHEMA: dict[str, Setting] = {s.key: s for s in [
        minimum=0, maximum=23, env="DAILY_EMAIL_HOUR",
        label="Daily run time",
        help="Hour of the day, in the timezone below, when the pipeline runs."),
-    _s(key="timezone", type="choice", default="Asia/Karachi", group="schedule",
+    _s(key="timezone", type="choice", default="UTC", group="schedule",
        choices=TIMEZONES, label="Timezone",
        help="Used for the schedule and for displaying times."),
     _s(key="digest_size", type="int", default=15, group="schedule",
@@ -107,6 +138,11 @@ SCHEMA: dict[str, Setting] = {s.key: s for s in [
     _s(key="jsearch_limit", type="int", default=200, group="integrations",
        minimum=0, maximum=1000000, label="Monthly request allowance",
        help="Your plan's limit. Drives the quota gauge — the free tier is 200."),
+    _s(key="search_country", type="choice", default="US", group="integrations",
+       choices=COUNTRIES, label="Default search country",
+       help="ISO country code used for saved searches that do not name one. "
+            "JSearch requires a country, so worldwide-remote searches are a "
+            "country plus 'Remote only'."),
     _s(key="google_sheet_id", type="str", default="", group="integrations",
        env="GOOGLE_SHEET_ID", label="Google Sheet ID",
        help="Optional. Enables exporting results to a spreadsheet."),

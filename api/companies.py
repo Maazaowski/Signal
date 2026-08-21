@@ -21,14 +21,14 @@ router = APIRouter()
 async def api_get_companies(
     ats_platform: str | None = None,
     crawl_status: str | None = None,
-    india_friendly: str | None = None,
+    location_fit: str | None = None,
     search: str | None = None,
     limit: int = Query(200, ge=1, le=500),
     offset: int = Query(0, ge=0),
 ):
     companies = get_companies(
         ats_platform=ats_platform, crawl_status=crawl_status,
-        india_friendly=india_friendly, search=search,
+        location_fit=location_fit, search=search,
         limit=limit, offset=offset,
     )
     return {"companies": companies, "count": len(companies)}
@@ -43,7 +43,7 @@ class CompanyInput(BaseModel):
     founded_year: int = 0
     employee_count: str = ""
     tags: str = ""
-    india_friendly: str = "unknown"
+    location_fit: str = "unknown"
     notes: str = ""
 
 
@@ -96,7 +96,7 @@ async def api_seed_companies():
 
 @router.post("/api/companies/mega-seed")
 async def api_mega_seed():
-    """Load the full curated company list (Indian tech + MNCs + global remote)."""
+    """Load the full curated company list (large employers + remote-first)."""
     return enqueue_run("seed", mega=True)
 
 

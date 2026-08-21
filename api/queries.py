@@ -22,16 +22,21 @@ async def api_get_queries():
 
 class QueryInput(BaseModel):
     query: str
-    country: str = "IN"
+    # Left empty rather than defaulting here: a model default is evaluated at
+    # import, which is exactly how config used to go stale in this codebase.
+    # The country is resolved from settings at the point of use below.
+    country: str = ""
     date_posted: str = "3days"
     remote_jobs_only: bool = False
 
 
 @router.post("/api/search-queries")
 async def api_add_query(body: QueryInput):
+    from core import settings_store as settings
+    country = body.country or settings.get("search_country")
     try:
         qid = add_active_profile_query(
-            body.query, body.country, body.date_posted, body.remote_jobs_only,
+            body.query, country, body.date_posted, body.remote_jobs_only,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e

@@ -16,6 +16,7 @@ import threading
 from datetime import datetime
 from pathlib import Path
 
+from core import settings_store as settings
 from core.database import get_connection
 
 SCHEMA_VERSION = 1
@@ -55,13 +56,16 @@ def default_config() -> dict:
             },
         },
         "location": {
-            "india_positive": [],
-            "india_negative": [],
+            # Renamed from india_negative / india_positive when the tool stopped
+            # assuming a country. core.scorer still reads the old keys, so a
+            # profile exported before the rename keeps working.
+            "blocking_terms": [],    # rules a role out outright -> "no"
+            "weak_positives": [],    # softer hints, checked after the rules below
             "timezone_compatible": [],
             "timezone_incompatible": [],
-            # Location matching used to be hardcoded to India inside the scorer.
-            # These four make it profile-driven. Left empty, core.scorer falls
-            # back to its original India defaults so older profiles are unchanged.
+            # Everything the scorer matches on comes from here. Left empty,
+            # nothing about a home country is assumed: only genuinely worldwide
+            # postings score as open. Set them in Settings -> Where you can work.
             "home_terms": [],        # home country/cities -> "yes"
             "global_terms": [],      # worldwide / anywhere / remote-global -> "yes"
             "region_terms": [],      # wider region (apac, asia, mena) -> "yes"
@@ -431,14 +435,16 @@ def seed_search_queries_from_profile(pid: int, replace: bool = False) -> int:
 
     added = 0
     for q in queries:
-        key = (str(q.get("query", "")).strip().lower(), q.get("country", "IN"))
+        default_country = settings.get("search_country")
+        key = (str(q.get("query", "")).strip().lower(),
+               q.get("country") or default_country)
         if not key[0]:
             continue
         if key in existing_keys:
             continue
         add_search_query(
             query=q.get("query", ""),
-            country=q.get("country", "IN"),
+            country=q.get("country") or default_country,
             date_posted=q.get("date_posted", "3days"),
             remote_jobs_only=bool(q.get("remote_jobs_only", False)),
         )
@@ -558,7 +564,7 @@ def get_active_profile_queries() -> list[dict]:
         out.append({
             "id": idx,
             "query": q.get("query", ""),
-            "country": q.get("country", "IN"),
+            "country": q.get("country") or settings.get("search_country"),
             "date_posted": q.get("date_posted", "3days"),
             "remote_jobs_only": bool(q.get("remote_jobs_only", False)),
             "enabled": bool(q.get("enabled", True)),
@@ -566,7 +572,7 @@ def get_active_profile_queries() -> list[dict]:
     return out
 
 
-def add_active_profile_query(query: str, country: str = "IN",
+def add_active_profile_query(query: str, country: str = "",
                              date_posted: str = "3days",
                              remote_jobs_only: bool = False) -> int:
     """Append a query to the active profile. Returns its new index.

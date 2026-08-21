@@ -33,7 +33,12 @@ PORT = int(os.getenv("PORT", "8000"))
 
 # ── Legacy ─────────────────────────────────────────────────────
 # The timezone used to be hardcoded here, which is precisely why it could not be
-# changed without editing code. It is a real setting now; this constant survives
-# only so settings_store.bootstrap_from_env() can carry an existing install's
-# value across on the first run after the switch.
-LEGACY_TIMEZONE = "Asia/Karachi"
+# changed without editing code. It is a real setting now; this survives only so
+# settings_store.bootstrap_from_env() can carry an existing install's value
+# across on the first run after the switch.
+#
+# Empty by default. It was hardcoded to a specific zone, which meant every fresh
+# install anywhere on earth was bootstrapped into that timezone no matter what
+# the setting's own default said. Unset, the schema default (UTC) applies and
+# the user picks their own in Settings.
+LEGACY_TIMEZONE = os.getenv("DAILY_EMAIL_TIMEZONE", "")

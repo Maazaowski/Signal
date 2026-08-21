@@ -33,9 +33,11 @@ store. Anything describing this schema without them predates that work.
 
 ### Notable columns
 
-- **`jobs.india_friendly`** — despite the name, this means *location fit*: can
-  you actually take this role. The name is historical and maps onto an API
-  parameter and JS state; the UI says "open to you". See `CLAUDE.md`.
+- **`jobs.location_fit`** — `yes` / `maybe` / `no`: can you actually take this
+  role, judged against your profile's `location` section. The UI says "open to
+  you". Was called `india_friendly` before the tool stopped assuming a country;
+  `init_db()` renames the column in place on first start after upgrading, and
+  the rename is idempotent.
 - **`jobs.mark_for_email`** — set from **Roles → Send in digest**. Marked roles
   sort above score order in the next digest and are exempt from stale cleanup.
 - **`jobs.last_seen`** — refreshed every time a role is seen again. Retention
